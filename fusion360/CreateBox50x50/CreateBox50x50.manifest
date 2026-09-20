@@ -1,0 +1,10 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "",
+    "description": {
+        "": "Erzeugt einen Volumenkoerper mit 50 x 50 mm Grundflaeche."
+    },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}
