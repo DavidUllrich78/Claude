@@ -1,0 +1,30 @@
+---
+import Basis from './Basis.astro';
+interface Props { title: string; description: string; h1: string; noindex?: boolean }
+const { title, description, h1, noindex } = Astro.props;
+---
+<Basis title={title} description={description} noindex={noindex}>
+  <article class="textseite wrap">
+    <h1>{h1}</h1>
+    <div class="textseite__inhalt">
+      <slot />
+    </div>
+  </article>
+</Basis>
+
+<style>
+  .textseite { padding-block: var(--s-8) var(--s-9); }
+  .textseite h1 { font-size: var(--fs-xxl); margin-bottom: var(--s-7); max-width: 20ch; }
+  .textseite__inhalt { max-width: 46rem; display: grid; gap: var(--s-4); }
+  .textseite__inhalt :global(h2) { font-size: var(--fs-xl); margin-top: var(--s-6); }
+  .textseite__inhalt :global(h3) { font-size: var(--fs-l); font-stretch: 90%; margin-top: var(--s-4); }
+  .textseite__inhalt :global(ul) { padding-left: 1.25rem; display: grid; gap: var(--s-2); }
+  .textseite__inhalt :global(address) { font-style: normal; }
+  .textseite__inhalt :global(a) { color: var(--signal-ink); font-weight: 600; word-break: break-word; }
+  .textseite__inhalt :global(.hinweis) {
+    padding: var(--s-4) var(--s-5);
+    background: var(--papier-2);
+    border-left: 4px solid var(--signal-marker);
+    font-size: var(--fs-s);
+  }
+</style>

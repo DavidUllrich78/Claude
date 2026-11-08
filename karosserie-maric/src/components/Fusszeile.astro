@@ -1,0 +1,70 @@
+---
+import Wortmarke from './Wortmarke.astro';
+import { firma } from '../data/firma';
+const jahr = new Date().getFullYear();
+---
+<footer class="fuss">
+  <div class="wrap fuss__raster">
+    <div class="fuss__marke">
+      <Wortmarke klein />
+      <p class="fuss__leise">Unfallinstandsetzung, Karosseriearbeiten und Lackierung in Simmozheim, {firma.landkreis}.</p>
+    </div>
+
+    <address class="fuss__adresse">
+      <strong>{firma.name}</strong><br />
+      Inhaber {firma.inhaber}<br />
+      {firma.strasse}<br />
+      {firma.plz} {firma.ort}
+    </address>
+
+    <ul class="fuss__kontakt" role="list">
+      <li>Telefon <a href={firma.telefonHref}>{firma.telefon}</a></li>
+      <li>Fax {firma.fax}</li>
+      <li>E-Mail <a href={`mailto:${firma.email}`}>{firma.email}</a></li>
+      <li>Öffnungszeiten <span class="ph">[PLATZHALTER: Öffnungszeiten]</span></li>
+    </ul>
+
+    <nav class="fuss__recht" aria-label="Rechtliches">
+      <ul role="list">
+        <li><a href="/impressum/">Impressum</a></li>
+        <li><a href="/datenschutz/">Datenschutz</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap">
+    <p class="fuss__unten">© {jahr} {firma.name}</p>
+  </div>
+</footer>
+
+<style>
+  .fuss {
+    background: var(--graphit);
+    color: var(--papier);
+    border-top: 4px solid var(--signal-marker);
+    font-size: var(--fs-s);
+  }
+  .fuss__raster {
+    display: grid;
+    gap: var(--s-6);
+    padding-block: var(--s-8) var(--s-6);
+  }
+  .fuss__marke { display: grid; gap: var(--s-4); }
+  .fuss__leise, .fuss__unten { color: var(--text-leise-dunkel); }
+  .fuss__adresse { font-style: normal; line-height: 1.7; }
+  .fuss__kontakt { display: grid; gap: var(--s-2); margin: 0; }
+  .fuss__kontakt a, .fuss__recht a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 600;
+  }
+  .fuss__kontakt li { line-height: 1.4; }
+  .fuss__recht ul { display: flex; flex-wrap: wrap; gap: var(--s-5); margin: 0; }
+  .fuss__unten {
+    padding-block: var(--s-4) var(--s-6);
+    border-top: 1px solid var(--graphit-line);
+  }
+  @media (min-width: 48em) {
+    .fuss__raster { grid-template-columns: 1.4fr 1fr 1.3fr auto; align-items: start; }
+  }
+</style>

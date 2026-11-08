@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /anfrage-gesendet/
+Disallow: /anfrage-fehler/
+
+Sitemap: https://karosserie-maric.de/sitemap.xml

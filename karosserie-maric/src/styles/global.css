@@ -1,0 +1,258 @@
+/* ==========================================================================
+   Karosserie Maric · Gestaltungssystem
+   Leitidee: Werkstattauftrag. Graphit wie Werkstattboden, Papierweiß wie der
+   Auftragszettel, Signal-Orange wie die Markierung an der Schadstelle.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-var.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/plex-sans-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/plex-sans-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Farben mit Rollen */
+  --graphit: #1e2226;          /* dunkle Flächen, Text auf Papier */
+  --graphit-2: #2a2f34;        /* Flächen auf Graphit */
+  --graphit-line: #3d4349;     /* Linien auf Graphit */
+  --papier: #f3f0ea;           /* Grundfläche */
+  --papier-2: #e8e3da;         /* abgesetzte Flächen, Bildplätze */
+  --papier-line: #cfc8bb;      /* Linien auf Papier */
+  --text-leise: #5a5f63;       /* Nebentext auf Papier (5,7:1) */
+  --text-leise-dunkel: #a3a9ad;/* Nebentext auf Graphit (6,6:1) */
+  --signal: #e2662f;           /* Handlungsfarbe: Buttons mit Graphit-Text (4,7:1) */
+  --signal-hover: #ec7a46;
+  --signal-ink: #a63b10;       /* Signal als Text auf Papier (5,7:1), Papier-2 (5,0:1) */
+  --signal-marker: #d9531e;    /* Markierungen, nicht textlich */
+
+  /* Schrift */
+  --font-display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --font-text: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --fs-xs: 0.8125rem;
+  --fs-s: 0.9375rem;
+  --fs-m: 1.0625rem;
+  --fs-l: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-xl: clamp(1.75rem, 1.35rem + 1.8vw, 2.75rem);
+  --fs-xxl: clamp(2.6rem, 1.6rem + 5.2vw, 6rem);
+  --fs-mega: clamp(3rem, 1.4rem + 8vw, 8.5rem);
+
+  /* Abstände */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --s-9: clamp(4.5rem, 3rem + 6vw, 8rem);
+
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --max: 82rem;
+  --radius: 2px;
+  --header-h: 4rem;
+  --callbar-h: 4.25rem;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Basis ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--graphit);
+  font-family: var(--font-text);
+  font-size: var(--fs-m);
+  line-height: 1.6;
+  font-feature-settings: 'kern';
+  padding-bottom: var(--callbar-h);
+}
+@media (min-width: 60em) {
+  body { padding-bottom: 0; }
+}
+
+img, svg, video { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 78%;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+p { text-wrap: pretty; max-width: 62ch; }
+
+a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--s-4);
+  top: -10rem;
+  z-index: 100;
+  background: var(--signal);
+  color: var(--graphit);
+  padding: var(--s-3) var(--s-4);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { top: var(--s-4); }
+
+/* ---------- Layout ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section { padding-block: var(--s-9); }
+.section--dunkel {
+  background: var(--graphit);
+  color: var(--papier);
+}
+.section--dunkel :focus-visible { outline-color: var(--signal); }
+
+/* Kopfzeile eines Abschnitts im Stil eines Auftragszettels */
+.kopf {
+  display: grid;
+  gap: var(--s-4);
+  margin-bottom: var(--s-7);
+}
+.kopf__pos {
+  font-family: var(--font-display);
+  font-stretch: 100%;
+  font-weight: 600;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--signal-ink);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.kopf__pos::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+}
+.section--dunkel .kopf__pos { color: var(--signal); }
+.kopf__titel { font-size: var(--fs-xxl); }
+.kopf__text { color: var(--text-leise); font-size: var(--fs-l); line-height: 1.45; }
+.section--dunkel .kopf__text { color: var(--text-leise-dunkel); }
+
+/* ---------- Bedienelemente ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  min-height: 3rem;
+  padding: var(--s-3) var(--s-5);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-stretch: 90%;
+  font-weight: 700;
+  font-size: var(--fs-m);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+.btn svg { width: 1.15em; height: 1.15em; flex: none; }
+.btn--signal { background: var(--signal); color: var(--graphit); }
+.btn--signal:hover { background: var(--signal-hover); }
+.btn--rahmen { border-color: currentColor; background: transparent; color: inherit; }
+.btn--rahmen:hover { background: var(--graphit); color: var(--papier); border-color: var(--graphit); }
+.section--dunkel .btn--rahmen:hover { background: var(--papier); color: var(--graphit); border-color: var(--papier); }
+
+.pfeil-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 2.75rem;
+  font-weight: 600;
+  color: var(--signal-ink);
+}
+.section--dunkel .pfeil-link { color: var(--signal); }
+.pfeil-link svg { width: 1.1em; height: 1.1em; transition: transform 180ms var(--ease-out); }
+.pfeil-link:hover svg, .pfeil-link:focus-visible svg { transform: translateX(3px); }
+
+/* ---------- Platzhalter: bewusst auffällig, damit nichts live geht ---------- */
+.ph {
+  display: inline;
+  padding: 0.05em 0.35em;
+  background: repeating-linear-gradient(-45deg, #fff3c4 0 6px, #ffe9a0 6px 12px);
+  color: #3a2b00;
+  outline: 1px dashed #a07a00;
+  font-family: var(--font-text);
+  font-stretch: 100%;
+  font-weight: 600;
+  font-size: 0.85em;
+  letter-spacing: 0;
+  line-height: 1.5;
+  text-transform: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

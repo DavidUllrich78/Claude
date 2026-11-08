@@ -1,0 +1,9 @@
+---
+import Textseite from '../layouts/Textseite.astro';
+import { firma } from '../data/firma';
+---
+<Textseite title="Anfrage gesendet | Karosserie Maric" description="Ihre Anfrage an Karosserie Maric ist angekommen." h1="Danke, Ihre Anfrage ist angekommen." noindex>
+  <p>Wir sehen uns Ihre Nachricht und die Fotos an und rufen Sie zurück.</p>
+  <p>Eilt es? Dann rufen Sie uns an: <a href={firma.telefonHref}>{firma.telefon}</a>.</p>
+  <p><a href="/">Zurück zur Startseite</a></p>
+</Textseite>

@@ -1,0 +1,91 @@
+---
+import { firma } from '../data/firma';
+
+const schritte = [
+  {
+    titel: 'Anrufen oder Fotos schicken',
+    text: 'Rufen Sie an oder schicken Sie uns über das Formular Fotos vom Schaden. Wir melden uns mit einem Termin zur Besichtigung.',
+    link: { href: firma.telefonHref, label: firma.telefon },
+  },
+  {
+    titel: 'Kostenvoranschlag',
+    text: 'Wir sehen uns den Schaden am Fahrzeug an und sagen Ihnen, was die Reparatur kostet und wie lange sie dauert.',
+    link: null,
+  },
+  {
+    titel: 'Reparatur und Abholung',
+    text: 'Wir reparieren und lackieren. Sobald Ihr Auto fertig ist, rufen wir Sie an und Sie holen es ab.',
+    link: null,
+  },
+];
+---
+<section id="ablauf" class="section section--dunkel" aria-labelledby="ablauf-titel">
+  <div class="wrap">
+    <header class="kopf ablauf__kopf">
+      <p class="kopf__pos">Ablauf bei Unfall</p>
+      <h2 id="ablauf-titel" class="kopf__titel">In drei Schritten zurück auf die Straße</h2>
+      <p class="kopf__text">So läuft eine Reparatur bei uns ab, vom ersten Anruf bis zur Schlüsselübergabe.</p>
+    </header>
+
+    <ol class="schritte" role="list">
+      {schritte.map((s, i) => (
+        <li class="schritt">
+          <span class="schritt__nr" aria-hidden="true">{i + 1}</span>
+          <h3 class="schritt__titel"><span class="visually-hidden">Schritt {i + 1}: </span>{s.titel}</h3>
+          <p class="schritt__text">{s.text}</p>
+          {s.link && <a class="pfeil-link" href={s.link.href}>{s.link.label}</a>}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .schritte {
+    display: grid;
+    gap: var(--s-7);
+    margin: 0;
+    counter-reset: none;
+  }
+  .schritt {
+    position: relative;
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+    padding-left: 4.5rem;
+  }
+  .schritt__nr {
+    position: absolute;
+    left: 0;
+    top: -0.4rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 70%;
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--signal);
+    font-variant-numeric: tabular-nums;
+  }
+  .schritt__titel { font-size: var(--fs-xl); }
+  .schritt__text { color: var(--text-leise-dunkel); }
+
+  @media (min-width: 60em) {
+    .schritte { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
+    .schritt {
+      padding-left: 0;
+      padding-top: 6.5rem;
+      border-top: 1px solid var(--graphit-line);
+    }
+    .schritt__nr { top: var(--s-5); font-size: 5.5rem; }
+    /* Verbindungslinie in Signalfarbe zwischen den Schritten */
+    .schritt::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 3rem;
+      height: 3px;
+      background: var(--signal-marker);
+    }
+  }
+</style>

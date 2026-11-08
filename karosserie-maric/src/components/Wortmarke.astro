@@ -1,0 +1,39 @@
+---
+/**
+ * Vorläufiger Schriftzug, bis das echte Logo vorliegt.
+ * [PLATZHALTER: Logo als SVG] hier einsetzen.
+ */
+interface Props { klein?: boolean }
+const { klein = false } = Astro.props;
+---
+<span class:list={['marke', { 'marke--klein': klein }]}>
+  <span class="marke__name">Maric</span>
+  <span class="marke__zusatz">Karosserie<br />&amp; Lack</span>
+</span>
+
+<style>
+  .marke { display: inline-flex; align-items: center; gap: 0.6rem; line-height: 1; }
+  .marke__name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 70%;
+    font-size: 1.85rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .marke__zusatz {
+    padding-left: 0.6rem;
+    border-left: 3px solid var(--signal-marker);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-stretch: 100%;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .marke--klein .marke__name { font-size: 1.5rem; }
+  @media (max-width: 22.4em) {
+    .marke:not(.marke--klein) .marke__zusatz { display: none; }
+  }
+</style>

@@ -1,0 +1,8 @@
+---
+import Textseite from '../layouts/Textseite.astro';
+import { firma } from '../data/firma';
+---
+<Textseite title="Seite nicht gefunden | Karosserie Maric" description="Diese Seite gibt es nicht." h1="Diese Seite gibt es nicht." noindex>
+  <p>Vielleicht hat sich die Adresse geändert. Auf der <a href="/">Startseite</a> finden Sie alle Informationen.</p>
+  <p>Telefon: <a href={firma.telefonHref}>{firma.telefon}</a></p>
+</Textseite>

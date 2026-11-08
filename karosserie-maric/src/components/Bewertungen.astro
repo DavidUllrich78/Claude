@@ -1,0 +1,80 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/firma';
+
+/*
+ * Nur echte Google-Bewertungen, wörtlich und mit Freigabe der Verfasser bzw.
+ * nach Prüfung der Google-Nutzungsbedingungen. Niemals Zitate erfinden.
+ * Leeres Array = Bereich zeigt nur Gesamtwertung und Link.
+ */
+const zitate: { text: string; name: string; datum: string }[] = [
+  { text: '[PLATZHALTER: Zitat 1, wörtlich aus Google übernommen, nur mit Freigabe]', name: '[PLATZHALTER: Vorname, abgekürzter Nachname]', datum: '[PLATZHALTER: Monat/Jahr]' },
+  { text: '[PLATZHALTER: Zitat 2]', name: '[PLATZHALTER: Name]', datum: '[PLATZHALTER: Monat/Jahr]' },
+  { text: '[PLATZHALTER: Zitat 3]', name: '[PLATZHALTER: Name]', datum: '[PLATZHALTER: Monat/Jahr]' },
+];
+---
+<section id="bewertungen" class="section" aria-labelledby="bew-titel">
+  <div class="wrap bew">
+    <div class="bew__gesamt">
+      <p class="kopf__pos">Bewertungen</p>
+      <h2 id="bew-titel" class="visually-hidden">Bewertungen auf Google</h2>
+      <p class="bew__zahl" aria-hidden="true">{firma.google.sterne}</p>
+      <p class="bew__sterne" aria-hidden="true">
+        <Icon name="stern" /><Icon name="stern" /><Icon name="stern" /><Icon name="stern" /><Icon name="stern" />
+      </p>
+      <p class="bew__info">
+        {firma.google.sterne} von 5 Sternen aus {firma.google.anzahl} Bewertungen auf Google.<br />
+        <span class="bew__stand">Stand: <span class="ph">{firma.google.stand}</span></span>
+      </p>
+      <a class="pfeil-link" href={firma.google.url} target="_blank" rel="noopener">
+        Alle Bewertungen auf Google<span class="visually-hidden"> (öffnet in neuem Tab)</span>
+        <Icon name="pfeil" />
+      </a>
+    </div>
+
+    {zitate.length > 0 && (
+      <ul class="zitate" role="list">
+        {zitate.map((z) => (
+          <li>
+            <figure class="zitat">
+              <blockquote><p><span class="ph">{z.text}</span></p></blockquote>
+              <figcaption>
+                <span class="ph">{z.name}</span>, Google, <span class="ph">{z.datum}</span>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style>
+  .bew { display: grid; gap: var(--s-7); }
+  .bew__gesamt { display: grid; gap: var(--s-3); justify-items: start; align-content: start; }
+  .bew__gesamt .kopf__pos { width: 100%; margin-bottom: var(--s-3); }
+  .bew__zahl {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 70%;
+    font-size: clamp(6rem, 4rem + 10vw, 11rem);
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+  }
+  .bew__sterne { display: flex; gap: 3px; color: var(--signal-marker); }
+  .bew__sterne :global(svg) { width: 1.6rem; height: 1.6rem; }
+  .bew__info { font-size: var(--fs-l); line-height: 1.4; }
+  .bew__stand { font-size: var(--fs-s); color: var(--text-leise); }
+
+  .zitate { display: grid; gap: 0; margin: 0; border-top: 2px solid var(--graphit); }
+  .zitate li { border-bottom: 1px solid var(--papier-line); }
+  .zitat { display: grid; gap: var(--s-3); padding-block: var(--s-5); }
+  .zitat blockquote { font-size: var(--fs-l); line-height: 1.45; }
+  .zitat blockquote p::before { content: '„'; }
+  .zitat blockquote p::after { content: '“'; }
+  .zitat figcaption { font-size: var(--fs-s); color: var(--text-leise); }
+
+  @media (min-width: 60em) {
+    .bew { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s-8); align-items: start; }
+  }
+</style>

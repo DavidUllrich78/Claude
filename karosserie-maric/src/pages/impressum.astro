@@ -1,0 +1,41 @@
+---
+import Textseite from '../layouts/Textseite.astro';
+import { firma } from '../data/firma';
+---
+<Textseite title="Impressum | Karosserie Maric, Simmozheim" description="Impressum von Karosserie-Maric, Inhaber Franjo Maric, Im Mönchgraben 39, 75397 Simmozheim." h1="Impressum">
+  <p class="hinweis"><span class="ph">[PLATZHALTER: Rechtstext vor Veröffentlichung prüfen lassen, z. B. mit e-recht24, Datenschutz-Generator.de oder durch einen Anwalt. Diesen Hinweis danach entfernen.]</span></p>
+
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <address>
+    {firma.name}<br />
+    Inhaber: {firma.inhaber}<br />
+    {firma.strasse}<br />
+    {firma.plz} {firma.ort}<br />
+    Deutschland
+  </address>
+  <p>Rechtsform: <span class="ph">[PLATZHALTER: Rechtsform, z. B. Einzelunternehmen; bei GmbH zusätzlich Geschäftsführer, Registergericht, HRB-Nummer]</span></p>
+
+  <h2>Kontakt</h2>
+  <p>
+    Telefon: <a href={firma.telefonHref}>{firma.telefon}</a><br />
+    Fax: {firma.fax}<br />
+    E-Mail: <a href={`mailto:${firma.email}`}>{firma.email}</a>
+  </p>
+
+  <h2>Umsatzsteuer-Identifikationsnummer</h2>
+  <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: <span class="ph">[PLATZHALTER: USt-IdNr., falls vorhanden; sonst Abschnitt entfernen]</span></p>
+
+  <h2>Angaben zum Handwerk</h2>
+  <p>
+    Berufsbezeichnung: <span class="ph">[PLATZHALTER: z. B. Karosserie- und Fahrzeugbauermeister, Fahrzeuglackierermeister, verliehen in Deutschland]</span><br />
+    Eintragung in die Handwerksrolle bei: <span class="ph">[PLATZHALTER: zuständige Handwerkskammer mit Anschrift]</span><br />
+    Berufsrechtliche Regelungen: Handwerksordnung (HwO), abrufbar unter <a href="https://www.gesetze-im-internet.de/hwo/" rel="noopener">gesetze-im-internet.de/hwo</a>
+  </p>
+
+  <h2>Verbraucherstreitbeilegung</h2>
+  <p><span class="ph">[PLATZHALTER: Hinweis nach § 36 VSBG nur nötig bei mehr als 10 Beschäftigten. Dann z. B.: „Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.“ Bei Teilnahme Schlichtungsstelle nennen. Sonst Abschnitt entfernen.]</span></p>
+
+  <h2>Fotos und Gestaltung</h2>
+  <p>Fotos: <span class="ph">[PLATZHALTER: Urheber der Fotos, z. B. Karosserie-Maric oder Name des Fotografen]</span></p>
+  <p>Schriften: Archivo und IBM Plex Sans, SIL Open Font License 1.1, lokal ausgeliefert.</p>
+</Textseite>

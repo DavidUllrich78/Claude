@@ -1,0 +1,84 @@
+---
+import Icon from './Icon.astro';
+import Wortmarke from './Wortmarke.astro';
+import { firma } from '../data/firma';
+
+interface Props { start?: boolean }
+
+const nav = [
+  { href: '/#leistungen', label: 'Leistungen' },
+  { href: '/#ablauf', label: 'Ablauf' },
+  { href: '/#vorher-nachher', label: 'Vorher/Nachher' },
+  { href: '/#ueber-uns', label: 'Über uns' },
+  { href: '/#kontakt', label: 'Kontakt' },
+];
+---
+<header class="kopfzeile">
+  <div class="wrap kopfzeile__innen">
+    <a class="kopfzeile__marke" href="/">
+      <Wortmarke />
+      <span class="visually-hidden">, zur Startseite</span>
+    </a>
+
+    <nav class="kopfzeile__nav" aria-label="Hauptnavigation">
+      <ul role="list">
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <a class="btn btn--signal kopfzeile__anruf" href={firma.telefonHref}>
+      <Icon name="telefon" />
+      <span class="kopfzeile__nummer">{firma.telefon}</span>
+      <span class="kopfzeile__kurz">Anrufen</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .kopfzeile {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--graphit);
+    color: var(--papier);
+    border-bottom: 1px solid var(--graphit-line);
+  }
+  .kopfzeile__innen {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    min-height: var(--header-h);
+  }
+  .kopfzeile__marke {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .kopfzeile__nav { display: none; }
+  .kopfzeile__nav ul { display: flex; gap: var(--s-1); margin: 0; }
+  .kopfzeile__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: var(--s-3);
+    font-size: var(--fs-s);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-leise-dunkel);
+    transition: color 150ms ease;
+  }
+  .kopfzeile__nav a:hover { color: var(--papier); text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 2px; }
+
+  .kopfzeile__anruf { min-height: 2.75rem; padding-inline: var(--s-4); }
+  .kopfzeile__nummer { display: none; }
+
+  @media (min-width: 30em) {
+    .kopfzeile__nummer { display: inline; }
+    .kopfzeile__kurz { display: none; }
+  }
+  @media (min-width: 64em) {
+    .kopfzeile__nav { display: block; }
+  }
+</style>

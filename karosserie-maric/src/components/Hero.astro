@@ -1,0 +1,209 @@
+---
+import Icon from './Icon.astro';
+import Bildplatz from './Bildplatz.astro';
+import { firma } from '../data/firma';
+
+// Sobald das Werkstattfoto vorliegt:
+// import werkstatt from '../assets/fotos/werkstatt.jpg';
+const werkstatt = undefined;
+
+const merkmale = [
+  'Meisterbetrieb ja/nein',
+  'Abwicklung mit der Versicherung ja/nein',
+  'Ersatzwagen ja/nein',
+  'Hol- und Bringservice ja/nein',
+];
+---
+<section class="hero section--dunkel" aria-labelledby="hero-titel">
+  <div class="wrap hero__raster">
+    <div class="hero__text">
+      <p class="hero__adresse">{firma.strasse} · {firma.plz} {firma.ort}</p>
+
+      <h1 id="hero-titel" class="hero__titel">
+        <span class="hero__zeile1">Karosserie &amp; Lack aus Simmozheim.</span>
+        <span class="hero__zeile2">
+          <span class="markiert">Unfallschaden?<svg class="markiert__kreis" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M28 70C20 34 120 12 220 14c90 2 170 18 166 52-4 36-110 48-206 46C88 110 10 96 22 58 30 34 92 20 150 16" /></svg></span>
+          Wir machen das.
+        </span>
+      </h1>
+
+      <p class="hero__lead">
+        Wir setzen Ihr Fahrzeug nach einem Unfall instand, richten die Karosserie und lackieren.
+        Rufen Sie an oder schicken Sie uns Fotos vom Schaden.
+      </p>
+
+      <div class="hero__aktion">
+        <a class="hero__tel" href={firma.telefonHref}>
+          <span class="hero__tel-label"><Icon name="telefon" /> Jetzt anrufen</span>
+          <span class="hero__tel-nummer">{firma.telefon}</span>
+        </a>
+        <a class="pfeil-link hero__melden" href="#kontakt">
+          <Icon name="kamera" />
+          Schaden melden: Fotos schicken
+          <Icon name="pfeil" />
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__bild">
+      <Bildplatz
+        src={werkstatt}
+        alt="[PLATZHALTER: Beschreibung des Werkstattfotos]"
+        motiv="Werkstatt Karosserie Maric: Fahrzeug auf der Richtbank oder in der Lackierkabine, echtes Foto"
+        format="4:5 hoch"
+        ratio="4 / 5"
+        sizes="(min-width: 60em) 40vw, 100vw"
+        eager
+        dunkel
+      />
+    </div>
+
+    <div class="hero__vertrauen">
+      <a class="bewertung" href={firma.google.url} rel="noopener" target="_blank">
+        <span class="bewertung__zahl">{firma.google.sterne}</span>
+        <span class="bewertung__text">
+          <span class="bewertung__sterne" aria-hidden="true">
+            <Icon name="stern" /><Icon name="stern" /><Icon name="stern" /><Icon name="stern" /><Icon name="stern" />
+          </span>
+          <span><span class="visually-hidden">{firma.google.sterne} von 5 Sternen, </span>{firma.google.anzahl} Bewertungen auf Google</span>
+          <span class="bewertung__stand">Stand: <span class="ph">{firma.google.stand}</span><span class="visually-hidden"> (öffnet in neuem Tab)</span></span>
+        </span>
+      </a>
+      <ul class="merkmale" role="list">
+        {merkmale.map((m) => <li><span class="ph">[PLATZHALTER: {m}]</span></li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: var(--s-7) var(--s-8); overflow: hidden; }
+  .hero__raster {
+    display: grid;
+    gap: var(--s-7);
+    grid-template-areas: 'text' 'bild' 'vertrauen';
+  }
+  .hero__text { grid-area: text; display: grid; gap: var(--s-5); align-content: start; }
+  .hero__bild { grid-area: bild; }
+  .hero__vertrauen { grid-area: vertrauen; }
+
+  .hero__adresse {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-leise-dunkel);
+    font-weight: 600;
+  }
+  .hero__titel { display: grid; gap: var(--s-3); }
+  .hero__zeile1 {
+    font-size: var(--fs-l);
+    font-stretch: 100%;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .hero__zeile2 { font-size: min(var(--fs-mega), 12.4vw); font-stretch: 72%; line-height: 0.92; text-transform: uppercase; }
+
+  .markiert { position: relative; display: inline-block; white-space: nowrap; }
+  .markiert__kreis {
+    position: absolute;
+    left: -6%;
+    top: -16%;
+    width: 112%;
+    height: 132%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .markiert__kreis path {
+    fill: none;
+    stroke: var(--signal-marker);
+    stroke-width: 4;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .markiert__kreis { animation: markieren 500ms 250ms var(--ease-out) both; transform-origin: 50% 50%; }
+  }
+  @keyframes markieren {
+    from { opacity: 0; transform: scale(1.08, 1.25); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .hero__lead { font-size: var(--fs-l); line-height: 1.45; color: var(--papier); max-width: 40ch; }
+
+  .hero__aktion { display: grid; gap: var(--s-4); justify-items: start; margin-top: var(--s-2); }
+  .hero__tel {
+    display: grid;
+    gap: var(--s-1);
+    padding: var(--s-4) var(--s-5) var(--s-3);
+    background: var(--signal);
+    color: var(--graphit);
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: background-color 180ms ease;
+  }
+  .hero__tel:hover { background: var(--signal-hover); }
+  .hero__tel-label {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    font-size: var(--fs-s); font-weight: 600;
+  }
+  .hero__tel-label :global(svg) { width: 1.1em; height: 1.1em; }
+  .hero__tel-nummer {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 80%;
+    font-size: var(--fs-xl);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__melden :global(svg:first-child) { width: 1.25em; height: 1.25em; }
+
+  /* Vertrauensleiste */
+  .hero__vertrauen {
+    display: grid;
+    gap: var(--s-5);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--graphit-line);
+  }
+  .bewertung {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-4);
+    text-decoration: none;
+    justify-self: start;
+  }
+  .bewertung__zahl {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 80%;
+    font-size: 3.25rem;
+    line-height: 1;
+  }
+  .bewertung__text { display: grid; gap: 0.15rem; font-size: var(--fs-s); line-height: 1.35; }
+  .bewertung:hover .bewertung__text > span:nth-child(2) { text-decoration: underline; }
+  .bewertung__sterne { display: flex; gap: 2px; color: var(--signal); }
+  .bewertung__sterne :global(svg) { width: 1.05rem; height: 1.05rem; }
+  .bewertung__stand { color: var(--text-leise-dunkel); font-size: var(--fs-xs); }
+
+  .merkmale { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); margin: 0; font-size: var(--fs-s); }
+
+  @media (min-width: 60em) {
+    .hero { padding-block: var(--s-8) var(--s-7); }
+    .hero__raster {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-areas: none;
+      column-gap: var(--s-6);
+      row-gap: var(--s-8);
+    }
+    .hero__text { grid-column: 1 / 9; grid-row: 1; padding-top: var(--s-6); }
+    .hero__zeile2 { font-size: min(6.6rem, 7.1vw); }
+    .hero__bild { grid-column: 9 / 13; grid-row: 1; }
+    .hero__vertrauen {
+      grid-column: 1 / -1;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: var(--s-7);
+    }
+    .merkmale { justify-content: flex-end; }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+/* Leistungen als Positionsliste, aufgebaut wie ein Kostenvoranschlag. */
+const positionen = [
+  {
+    nr: '01',
+    titel: 'Unfallinstandsetzung',
+    text: 'Nach einem Unfall begutachten wir den Schaden, schreiben einen Kostenvoranschlag und setzen das Fahrzeug instand.',
+    detail: null,
+  },
+  {
+    nr: '02',
+    titel: 'Karosseriearbeiten',
+    text: 'Wir richten, ersetzen und passen Karosserieteile an, von der Delle bis zum Blechschaden.',
+    detail: null,
+  },
+  {
+    nr: '03',
+    titel: 'Lackierung',
+    text: 'Wir lackieren reparierte Teile und Flächen im Farbton Ihres Fahrzeugs.',
+    detail: '[PLATZHALTER: Teil- oder Komplettlackierung, Smart Repair, Lackierkabine ja/nein]',
+  },
+  {
+    nr: '04',
+    titel: 'Rund um den Schaden',
+    text: null,
+    detail: '[PLATZHALTER: Abwicklung mit der Versicherung ja/nein · Ersatzwagen ja/nein · Hol- und Bringservice ja/nein]',
+  },
+];
+---
+<section id="leistungen" class="section" aria-labelledby="leistungen-titel">
+  <div class="wrap leistungen">
+    <header class="kopf leistungen__kopf">
+      <p class="kopf__pos">Leistungen</p>
+      <h2 id="leistungen-titel" class="kopf__titel">Was wir an Ihrem Auto machen</h2>
+    </header>
+
+    <ol class="positionen" role="list">
+      {positionen.map((p) => (
+        <li class="position">
+          <span class="position__nr" aria-hidden="true">{p.nr}</span>
+          <h3 class="position__titel">{p.titel}</h3>
+          <div class="position__text">
+            {p.text && <p>{p.text}</p>}
+            {p.detail && <p><span class="ph">{p.detail}</span></p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .positionen { margin: 0; border-top: 2px solid var(--graphit); }
+  .position {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    column-gap: var(--s-4);
+    row-gap: var(--s-3);
+    padding-block: var(--s-5) var(--s-6);
+    border-bottom: 1px solid var(--papier-line);
+  }
+  .position__nr {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-stretch: 100%;
+    font-size: var(--fs-s);
+    color: var(--signal-ink);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.35rem;
+  }
+  .position__titel { font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem); hyphens: manual; }
+  .position__text { grid-column: 2; display: grid; gap: var(--s-3); color: var(--graphit); }
+
+  @media (min-width: 48em) {
+    .position { grid-template-columns: 3.5rem minmax(0, 1.15fr) minmax(0, 1fr); align-items: baseline; }
+    .position__text { grid-column: 3; }
+  }
+  @media (min-width: 64em) {
+    .leistungen {
+      display: grid;
+      grid-template-columns: minmax(0, 3.5fr) minmax(0, 8.5fr);
+      gap: var(--s-7);
+      align-items: start;
+    }
+    .leistungen__kopf .kopf__titel { font-size: clamp(2.5rem, 1.5rem + 2.6vw, 4rem); }
+    .leistungen__kopf { position: sticky; top: calc(var(--header-h) + var(--s-6)); margin-bottom: 0; }
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/firma';
+---
+<nav class="anrufleiste" aria-label="Schnellkontakt">
+  <a class="anrufleiste__btn anrufleiste__btn--anruf" href={firma.telefonHref}>
+    <Icon name="telefon" />
+    <span>Anrufen</span>
+  </a>
+  <a class="anrufleiste__btn" href="/#kontakt">
+    <Icon name="kamera" />
+    <span>Schaden melden</span>
+  </a>
+</nav>
+
+<style>
+  .anrufleiste {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    height: var(--callbar-h);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--graphit-line);
+    border-top: 1px solid var(--graphit-line);
+  }
+  .anrufleiste__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    background: var(--graphit);
+    color: var(--papier);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-stretch: 90%;
+    font-size: var(--fs-m);
+    text-decoration: none;
+  }
+  .anrufleiste__btn svg { width: 1.25rem; height: 1.25rem; }
+  .anrufleiste__btn--anruf { background: var(--signal); color: var(--graphit); }
+  .anrufleiste__btn:focus-visible { outline-offset: -4px; }
+  @media (min-width: 60em) {
+    .anrufleiste { display: none; }
+  }
+</style>

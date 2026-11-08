@@ -1,0 +1,57 @@
+---
+import Basis from '../layouts/Basis.astro';
+import Hero from '../components/Hero.astro';
+import Leistungen from '../components/Leistungen.astro';
+import Ablauf from '../components/Ablauf.astro';
+import VorherNachher from '../components/VorherNachher.astro';
+import UeberUns from '../components/UeberUns.astro';
+import Bewertungen from '../components/Bewertungen.astro';
+import Kontakt from '../components/Kontakt.astro';
+import { firma } from '../data/firma';
+
+const title = 'Karosserie Maric Simmozheim | Unfallinstandsetzung, Karosserie & Lack';
+const description =
+  'Karosseriewerkstatt in Simmozheim (Landkreis Calw): Unfallinstandsetzung, Karosseriearbeiten und Lackierung. 4,9 Sterne bei 34 Google-Bewertungen. Telefon 07033 309018.';
+
+const jsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoBodyShop',
+  '@id': `${firma.domain}/#betrieb`,
+  name: firma.name,
+  url: `${firma.domain}/`,
+  telephone: firma.telefonIntl,
+  faxNumber: '+49 7033 309019',
+  email: firma.email,
+  image: `${firma.domain}/og-bild.png`,
+  founder: { '@type': 'Person', name: firma.inhaber },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: firma.strasse,
+    postalCode: firma.plz,
+    addressLocality: firma.ort,
+    addressRegion: 'Baden-Württemberg',
+    addressCountry: firma.land,
+  },
+  areaServed: firma.region.map((name) => ({ '@type': 'City', name })),
+  makesOffer: ['Unfallinstandsetzung', 'Karosseriearbeiten', 'Lackierung'].map((name) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name },
+  })),
+};
+if (firma.geo.exakt) {
+  jsonLd.geo = { '@type': 'GeoCoordinates', latitude: firma.geo.lat, longitude: firma.geo.lon };
+}
+if (firma.oeffnungszeiten.length) {
+  jsonLd.openingHours = firma.oeffnungszeiten.map((o) => `${o.tage} ${o.von}-${o.bis}`);
+}
+---
+<Basis title={title} description={description} start>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <Hero />
+  <Leistungen />
+  <Ablauf />
+  <VorherNachher />
+  <UeberUns />
+  <Bewertungen />
+  <Kontakt />
+</Basis>

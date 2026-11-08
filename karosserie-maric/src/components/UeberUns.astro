@@ -1,0 +1,84 @@
+---
+import Bildplatz from './Bildplatz.astro';
+import { firma } from '../data/firma';
+
+// import team from '../assets/fotos/team.jpg';
+const team = undefined;
+---
+<section id="ueber-uns" class="section ueber" aria-labelledby="ueber-titel">
+  <div class="wrap ueber__raster">
+    <div class="ueber__bild">
+      <Bildplatz
+        src={team}
+        alt="[PLATZHALTER: z. B. Franjo Maric und Team vor der Werkstatt in Simmozheim]"
+        motiv="Franjo Maric und Team in der Werkstatt, echtes Foto, keine gestellte Bürosituation"
+        format="4:3 quer"
+        ratio="4 / 3"
+        sizes="(min-width: 60em) 55vw, 100vw"
+      />
+    </div>
+
+    <div class="ueber__text">
+      <header class="kopf">
+        <p class="kopf__pos">Über uns</p>
+        <h2 id="ueber-titel" class="kopf__titel">Ihr Ansprechpartner: {firma.inhaber}</h2>
+      </header>
+      <p>
+        {firma.inhaber} führt {firma.name} in Simmozheim im {firma.landkreis}.
+        Wenn Sie anrufen, sprechen Sie mit dem Betrieb, der Ihr Auto auch repariert.
+      </p>
+      <p><span class="ph">[PLATZHALTER: Werdegang und Erfahrung von Franjo Maric in 2 bis 3 Sätzen, z. B. Ausbildung, Meistertitel ja/nein, seit wann selbstständig]</span></p>
+
+      <dl class="fakten">
+        <div>
+          <dt>Gegründet</dt>
+          <dd><span class="ph">[PLATZHALTER: Gründungsjahr]</span></dd>
+        </div>
+        <div>
+          <dt>Meisterbetrieb</dt>
+          <dd><span class="ph">[PLATZHALTER: ja/nein]</span></dd>
+        </div>
+        <div>
+          <dt>Standort</dt>
+          <dd>{firma.strasse}, {firma.ort}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ueber { background: var(--papier-2); }
+  .ueber__raster { display: grid; gap: var(--s-7); }
+  .ueber__text { display: grid; gap: var(--s-5); align-content: start; }
+  .ueber__text .kopf { margin-bottom: var(--s-2); }
+  .ueber__text .kopf__titel { font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4rem); }
+
+  .fakten {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--s-5);
+    margin-top: var(--s-4);
+    padding-top: var(--s-5);
+    border-top: 2px solid var(--graphit);
+  }
+  .fakten dt {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-leise);
+  }
+  .fakten dd { margin-top: var(--s-1); font-weight: 600; }
+
+  @media (min-width: 60em) {
+    .ueber__raster {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--s-6);
+      align-items: center;
+    }
+    /* Bild läuft bis zum linken Rand: bewusster Bruch des Rasters */
+    .ueber__bild { grid-column: 1 / 7; margin-left: calc(var(--gutter) * -1); }
+    .ueber__text { grid-column: 7 / 13; padding-left: var(--s-5); }
+  }
+</style>

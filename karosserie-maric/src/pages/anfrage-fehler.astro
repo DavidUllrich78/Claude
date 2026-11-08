@@ -1,0 +1,15 @@
+---
+import Textseite from '../layouts/Textseite.astro';
+import { firma } from '../data/firma';
+---
+<Textseite title="Anfrage nicht gesendet | Karosserie Maric" description="Beim Senden Ihrer Anfrage ist ein Fehler aufgetreten." h1="Ihre Anfrage konnte nicht gesendet werden." noindex>
+  <p>
+    Bitte prüfen Sie Ihre Angaben: Name, Telefonnummer und eine kurze Beschreibung brauchen wir.
+    Fotos dürfen höchstens 4 Stück sein, je bis 8 MB, im Format JPG oder PNG.
+  </p>
+  <p>
+    Am schnellsten erreichen Sie uns telefonisch unter <a href={firma.telefonHref}>{firma.telefon}</a>.
+    Sie können die Fotos auch per E-Mail an <a href={`mailto:${firma.email}`}>{firma.email}</a> schicken.
+  </p>
+  <p><a href="/#kontakt">Zurück zum Formular</a></p>
+</Textseite>

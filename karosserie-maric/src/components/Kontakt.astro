@@ -1,0 +1,271 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/firma';
+
+const { lat, lon } = firma.geo;
+const bbox = [lon - 0.012, lat - 0.006, lon + 0.012, lat + 0.006].map((n) => n.toFixed(4)).join('%2C');
+const osmEmbed = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lon}`;
+const nachbarorte = firma.region.filter((o) => o !== 'Simmozheim');
+---
+<section id="kontakt" class="section section--dunkel" aria-labelledby="kontakt-titel">
+  <div class="wrap kontakt">
+    <header class="kopf kontakt__kopf">
+      <p class="kopf__pos">Kontakt und Anfahrt</p>
+      <h2 id="kontakt-titel" class="kopf__titel">Schaden melden</h2>
+      <p class="kopf__text">Am schnellsten geht es per Telefon. Oder Sie schicken uns Fotos vom Schaden, wir rufen zurück.</p>
+    </header>
+
+    <div class="kontakt__daten">
+      <a class="kontakt__tel" href={firma.telefonHref}>
+        <span class="kontakt__tel-label"><Icon name="telefon" /> Telefon</span>
+        <span class="kontakt__tel-nummer">{firma.telefon}</span>
+      </a>
+
+      <dl class="kontakt__liste">
+        <div>
+          <dt><Icon name="karte" /> Adresse</dt>
+          <dd>
+            <address>{firma.name}<br />{firma.strasse}<br />{firma.plz} {firma.ort}</address>
+          </dd>
+        </div>
+        <div>
+          <dt><Icon name="mail" /> E-Mail</dt>
+          <dd><a href={`mailto:${firma.email}`}>{firma.email}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="telefon" /> Fax</dt>
+          <dd>{firma.fax}</dd>
+        </div>
+        <div>
+          <dt><Icon name="uhr" /> Öffnungszeiten</dt>
+          <dd><span class="ph">[PLATZHALTER: Öffnungszeiten, z. B. Mo bis Fr, Sa]</span></dd>
+        </div>
+      </dl>
+
+      <div class="karte" data-karte data-src={osmEmbed} data-titel="Karte: Lage der Werkstatt in Simmozheim (OpenStreetMap)">
+        <div class="karte__vorschau">
+          <p class="karte__ort">
+            <strong>{firma.strasse}</strong><br />{firma.plz} {firma.ort}
+          </p>
+          <p class="karte__hinweis">
+            Die Karte stammt von OpenStreetMap. Erst wenn Sie auf „Karte laden“ klicken, verbindet sich Ihr Browser mit deren Servern.
+            Mehr dazu in der <a href="/datenschutz/#karte">Datenschutzerklärung</a>.
+          </p>
+          <div class="karte__aktionen">
+            <button type="button" class="btn btn--rahmen" data-karte-laden hidden>Karte laden</button>
+            <a class="pfeil-link" href={firma.route.google} target="_blank" rel="noopener">
+              Route in Google Maps<span class="visually-hidden"> (öffnet in neuem Tab)</span> <Icon name="pfeil" />
+            </a>
+          </div>
+        </div>
+      </div>
+      {!firma.geo.exakt && <p class="kontakt__notiz"><span class="ph">[PLATZHALTER: exakte Koordinaten der Werkstatt in src/data/firma.ts eintragen, Karte zeigt aktuell Ortsmitte]</span></p>}
+
+      <p class="kontakt__region">
+        Die Werkstatt liegt in Simmozheim im {firma.landkreis}, mit kurzen Wegen aus {nachbarorte.slice(0, -1).join(', ')} und {nachbarorte.at(-1)}.
+      </p>
+    </div>
+
+    <form class="formular" action="/api/anfrage" method="post" enctype="multipart/form-data" data-formular aria-labelledby="formular-titel">
+      <h3 id="formular-titel" class="formular__titel">Fotos und Nachricht schicken</h3>
+      <p class="formular__info">Felder mit * brauchen wir, um Sie zurückzurufen.</p>
+
+      <div class="feld">
+        <label for="f-name">Name *</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="100"
+          aria-describedby="f-name-fehler" data-pruefen data-leer="Bitte geben Sie Ihren Namen an." />
+        <p id="f-name-fehler" class="feld__fehler" hidden></p>
+      </div>
+
+      <div class="feld">
+        <label for="f-telefon">Telefon für den Rückruf *</label>
+        <input id="f-telefon" name="telefon" type="tel" inputmode="tel" autocomplete="tel" required
+          pattern="[0-9+\(\)\/ \-]{6,30}" maxlength="30"
+          aria-describedby="f-telefon-fehler" data-pruefen
+          data-leer="Bitte geben Sie eine Telefonnummer an." data-falsch="Bitte eine gültige Telefonnummer eingeben, nur Ziffern, Leerzeichen, + / ( ) -." />
+        <p id="f-telefon-fehler" class="feld__fehler" hidden></p>
+      </div>
+
+      <div class="feld">
+        <label for="f-nachricht">Was ist passiert? *</label>
+        <textarea id="f-nachricht" name="nachricht" rows="5" required minlength="10" maxlength="3000"
+          aria-describedby="f-nachricht-hilfe f-nachricht-fehler" data-pruefen
+          data-leer="Bitte beschreiben Sie kurz den Schaden." data-falsch="Bitte beschreiben Sie den Schaden in ein paar Worten mehr."></textarea>
+        <p id="f-nachricht-hilfe" class="feld__hilfe">Zum Beispiel Fahrzeug, Stelle des Schadens und ob eine Versicherung beteiligt ist.</p>
+        <p id="f-nachricht-fehler" class="feld__fehler" hidden></p>
+      </div>
+
+      <div class="feld">
+        <label for="f-fotos">Fotos vom Schaden (optional)</label>
+        <input id="f-fotos" name="fotos" type="file" multiple accept="image/jpeg,image/png"
+          aria-describedby="f-fotos-hilfe f-fotos-fehler" data-pruefen />
+        <p id="f-fotos-hilfe" class="feld__hilfe">Bis zu 4 Fotos als JPG oder PNG, je höchstens 8 MB. iPhone-Fotos wandelt Ihr Handy beim Hochladen automatisch um. Am besten eine Aufnahme aus 2 bis 3 Metern Abstand und eine aus der Nähe.</p>
+        <p class="feld__hilfe" data-dateiliste aria-live="polite"></p>
+        <p id="f-fotos-fehler" class="feld__fehler" hidden></p>
+      </div>
+
+      <div class="feld feld--falle" aria-hidden="true">
+        <label for="f-website">Bitte leer lassen</label>
+        <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <p class="formular__datenschutz">
+        Wir verwenden Ihre Angaben und Fotos nur, um Ihre Anfrage zu bearbeiten.
+        Details stehen in der <a href="/datenschutz/#kontaktformular">Datenschutzerklärung</a>.
+      </p>
+
+      <button type="submit" class="btn btn--signal formular__senden">Anfrage senden</button>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { initKarte } from '../scripts/karte';
+  import { initFormular } from '../scripts/formular';
+  initKarte();
+  initFormular();
+</script>
+
+<style>
+  .kontakt { display: grid; gap: var(--s-7); }
+  .kontakt__kopf { margin-bottom: 0; }
+  .kontakt__daten { display: grid; gap: var(--s-6); align-content: start; }
+
+  .kontakt__tel {
+    display: grid;
+    gap: var(--s-1);
+    justify-self: start;
+    text-decoration: none;
+  }
+  .kontakt__tel-label { display: inline-flex; align-items: center; gap: var(--s-2); font-size: var(--fs-s); color: var(--text-leise-dunkel); font-weight: 600; }
+  .kontakt__tel-label :global(svg) { width: 1.1em; height: 1.1em; }
+  .kontakt__tel-nummer {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 75%;
+    font-size: var(--fs-xxl);
+    line-height: 0.95;
+    color: var(--signal);
+    font-variant-numeric: tabular-nums;
+  }
+  .kontakt__tel:hover .kontakt__tel-nummer { text-decoration: underline; text-decoration-thickness: 3px; }
+
+  .kontakt__liste { display: grid; gap: var(--s-4); margin: 0; }
+  .kontakt__liste > div { display: grid; grid-template-columns: 8rem 1fr; gap: var(--s-3); padding-bottom: var(--s-4); border-bottom: 1px solid var(--graphit-line); }
+  .kontakt__liste dt { display: flex; align-items: flex-start; gap: var(--s-2); color: var(--text-leise-dunkel); font-size: var(--fs-s); padding-top: 0.15rem; }
+  .kontakt__liste dt :global(svg) { width: 1.1rem; height: 1.1rem; flex: none; margin-top: 0.15rem; }
+  .kontakt__liste dd { margin: 0; }
+  .kontakt__liste address { font-style: normal; }
+  .kontakt__liste a { display: inline-flex; min-height: 2.75rem; align-items: center; margin-block: -0.6rem; word-break: break-word; }
+
+  /* Karte */
+  .karte {
+    position: relative;
+    min-height: 23rem;
+    background:
+      linear-gradient(var(--graphit-line) 1px, transparent 1px) 0 0 / 2.5rem 2.5rem,
+      linear-gradient(90deg, var(--graphit-line) 1px, transparent 1px) 0 0 / 2.5rem 2.5rem,
+      var(--graphit-2);
+    border: 1px solid var(--graphit-line);
+  }
+  .karte__vorschau {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: end;
+    gap: var(--s-3);
+    padding: var(--s-5);
+    background: linear-gradient(transparent 20%, rgb(30 34 38 / 0.92) 60%);
+  }
+  .karte__ort { font-size: var(--fs-l); line-height: 1.3; }
+  .karte__ort strong { font-family: var(--font-display); font-stretch: 85%; font-weight: 800; }
+  .karte__hinweis { font-size: var(--fs-xs); color: var(--text-leise-dunkel); }
+  .karte__aktionen { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); }
+  .karte :global(.karte__frame) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .karte::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 34%;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: -0.75rem 0 0 -0.75rem;
+    border: 4px solid var(--signal-marker);
+    border-radius: 50%;
+  }
+  .kontakt__notiz { font-size: var(--fs-xs); margin-top: calc(var(--s-6) * -1 + var(--s-2)); }
+  .kontakt__region { color: var(--text-leise-dunkel); font-size: var(--fs-s); }
+
+  /* Formular */
+  .formular {
+    display: grid;
+    gap: var(--s-5);
+    align-content: start;
+    padding: var(--s-6) var(--s-5);
+    background: var(--papier);
+    color: var(--graphit);
+    border-top: 6px solid var(--signal-marker);
+  }
+  .formular :focus-visible { outline-color: var(--signal-ink); }
+  .formular__titel { font-size: var(--fs-xl); }
+  .formular__info { font-size: var(--fs-s); color: var(--text-leise); margin-top: calc(var(--s-4) * -1); }
+  .feld { display: grid; gap: var(--s-2); }
+  .feld label { font-weight: 600; }
+  .feld input[type='text'],
+  .feld input[type='tel'],
+  .feld textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: var(--s-3) var(--s-3);
+    font: inherit;
+    color: var(--graphit);
+    background: #fff;
+    border: 1px solid #8a8f93;
+    border-bottom: 2px solid var(--graphit);
+    border-radius: var(--radius);
+  }
+  .feld textarea { resize: vertical; min-height: 8rem; }
+  .feld input[type='file'] {
+    width: 100%;
+    min-height: 3rem;
+    padding: var(--s-3);
+    font: inherit;
+    font-size: var(--fs-s);
+    background: #fff;
+    border: 1px dashed #8a8f93;
+    border-radius: var(--radius);
+  }
+  .feld input[type='file']::file-selector-button {
+    margin-right: var(--s-3);
+    padding: var(--s-2) var(--s-4);
+    font: inherit;
+    font-weight: 600;
+    color: var(--papier);
+    background: var(--graphit);
+    border: 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .feld [aria-invalid='true'] { border-color: #a1260d; border-bottom-color: #a1260d; background: #fff6f3; }
+  .feld__hilfe { font-size: var(--fs-s); color: var(--text-leise); }
+  .feld__fehler { font-size: var(--fs-s); font-weight: 600; color: #a1260d; }
+  .feld__fehler::before { content: '! '; }
+  .feld--falle { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .formular__datenschutz { font-size: var(--fs-s); color: var(--text-leise); }
+  .formular__senden { justify-self: start; min-width: 12rem; }
+  .formular__senden:disabled { opacity: 0.7; cursor: progress; }
+
+  @media (min-width: 40em) {
+    .karte { min-height: 0; aspect-ratio: 4 / 3; }
+    .kontakt__liste > div { grid-template-columns: 9.5rem 1fr; }
+  }
+  @media (min-width: 64em) {
+    .kontakt {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      column-gap: var(--s-8);
+      align-items: start;
+    }
+    .kontakt__kopf { grid-column: 1 / -1; }
+    .formular { padding: var(--s-7) var(--s-6); position: sticky; top: calc(var(--header-h) + var(--s-5)); }
+  }
+</style>

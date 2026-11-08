@@ -1,0 +1,156 @@
+---
+import type { ImageMetadata } from 'astro';
+import Bildplatz from './Bildplatz.astro';
+
+/*
+ * 2 bis 4 Bildpaare. Beide Fotos eines Paares aus derselben Position,
+ * gleicher Ausschnitt, Format 3:2 quer. Fotos nach src/assets/fotos/ legen
+ * und hier importieren, z. B.:
+ *   import vorher1 from '../assets/fotos/paar1-vorher.jpg';
+ */
+type Paar = {
+  titel: string;
+  vorher?: ImageMetadata;
+  nachher?: ImageMetadata;
+  altVorher: string;
+  altNachher: string;
+};
+
+const paare: Paar[] = [
+  {
+    titel: '[PLATZHALTER: Fahrzeug und Schaden, z. B. Kompaktwagen, Seitenschaden Fahrertür]',
+    altVorher: '[PLATZHALTER: Alt-Text Vorher]',
+    altNachher: '[PLATZHALTER: Alt-Text Nachher]',
+  },
+  {
+    titel: '[PLATZHALTER: Fahrzeug und Schaden, z. B. Heckschaden nach Auffahrunfall]',
+    altVorher: '[PLATZHALTER: Alt-Text Vorher]',
+    altNachher: '[PLATZHALTER: Alt-Text Nachher]',
+  },
+];
+---
+<section id="vorher-nachher" class="section" aria-labelledby="vn-titel">
+  <div class="wrap">
+    <header class="kopf vn-kopf">
+      <p class="kopf__pos">Vorher/Nachher</p>
+      <h2 id="vn-titel" class="kopf__titel">Gleiche Stelle, vor und nach der Reparatur</h2>
+      <p class="kopf__text">Ziehen Sie den Regler zur Seite oder nutzen Sie die Pfeiltasten.</p>
+    </header>
+
+    <div class="vn-liste">
+      {paare.map((p, i) => (
+        <figure class="vn" data-vn>
+          <div class="vn__buehne">
+            <div class="vn__bild vn__bild--vorher">
+              <Bildplatz src={p.vorher} alt={p.altVorher} motiv={`Paar ${i + 1}: Vorher, Schaden vor der Reparatur`} format="3:2 quer" ratio="3 / 2" sizes="(min-width: 60em) 45vw, 100vw" />
+              <span class="vn__marke vn__marke--vorher" aria-hidden="true">Vorher</span>
+            </div>
+            <div class="vn__bild vn__bild--nachher">
+              <Bildplatz src={p.nachher} alt={p.altNachher} motiv={`Paar ${i + 1}: Nachher, gleiche Perspektive`} format="3:2 quer" ratio="3 / 2" sizes="(min-width: 60em) 45vw, 100vw" />
+              <span class="vn__marke vn__marke--nachher" aria-hidden="true">Nachher</span>
+            </div>
+            <input class="vn__regler" type="range" min="0" max="100" value="50" step="1"
+              aria-label={`Vergleich Paar ${i + 1}: Anteil des Vorher-Bildes in Prozent`} hidden />
+            <span class="vn__griff" aria-hidden="true"><span></span></span>
+          </div>
+          <figcaption class="vn__text"><span class="ph">{p.titel}</span></figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initVorherNachher } from '../scripts/vorher-nachher';
+  initVorherNachher();
+</script>
+
+<style>
+  .vn-liste { display: grid; gap: var(--s-8); }
+  .vn { display: grid; gap: var(--s-3); align-content: start; }
+  .vn__text { font-size: var(--fs-s); color: var(--text-leise); }
+
+  /* Ohne JavaScript: beide Bilder nebeneinander */
+  .vn__buehne { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); }
+  .vn__bild { position: relative; }
+  .vn__marke {
+    position: absolute;
+    top: var(--s-3);
+    padding: var(--s-1) var(--s-3);
+    background: var(--graphit);
+    color: var(--papier);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-stretch: 90%;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .vn__marke--vorher { left: var(--s-3); }
+  .vn__marke--nachher { right: var(--s-3); background: var(--signal); color: var(--graphit); }
+  .vn__griff { display: none; }
+
+  /* Mit JavaScript: übereinanderliegende Bilder mit Regler */
+  .vn.is-aktiv .vn__buehne {
+    position: relative;
+    display: block;
+    touch-action: pan-y;
+    cursor: ew-resize;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .vn.is-aktiv .vn__bild--nachher {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 0 0 var(--pos, 50%));
+  }
+  .vn.is-aktiv .vn__regler {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .vn.is-aktiv .vn__griff {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos, 50%);
+    width: 3px;
+    margin-left: -1.5px;
+    background: var(--signal);
+    pointer-events: none;
+  }
+  .vn__griff span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    transform: translate(-50%, -50%);
+    background: var(--signal);
+    border: 3px solid var(--graphit);
+    border-radius: 50%;
+  }
+  .vn__griff span::before,
+  .vn__griff span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-block: 6px solid transparent;
+    transform: translateY(-50%);
+  }
+  .vn__griff span::before { left: 7px; border-right: 7px solid var(--graphit); }
+  .vn__griff span::after { right: 7px; border-left: 7px solid var(--graphit); }
+  .vn__regler:focus-visible ~ .vn__griff span { outline: 3px solid var(--graphit); outline-offset: 3px; box-shadow: 0 0 0 6px var(--papier); }
+
+  @media (min-width: 60em) {
+    .vn-liste { grid-template-columns: 1fr 1fr; gap: var(--s-6); }
+    .vn:nth-child(even) { margin-top: var(--s-8); }
+  }
+</style>
