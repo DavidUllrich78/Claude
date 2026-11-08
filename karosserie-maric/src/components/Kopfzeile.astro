@@ -1,17 +1,19 @@
 ---
 import Icon from './Icon.astro';
 import Wortmarke from './Wortmarke.astro';
-import { firma } from '../data/firma';
+import { firma, PLATZHALTER_ZEIGEN } from '../data/firma';
+import { hatVorherNachher } from '../data/vorher-nachher';
 
 interface Props { start?: boolean }
 
-const nav = [
+const alleNav = [
   { href: '/#leistungen', label: 'Leistungen' },
   { href: '/#ablauf', label: 'Ablauf' },
   { href: '/#vorher-nachher', label: 'Vorher/Nachher' },
   { href: '/#ueber-uns', label: 'Über uns' },
   { href: '/#kontakt', label: 'Kontakt' },
 ];
+const nav = alleNav.filter((n) => n.href !== '/#vorher-nachher' || hatVorherNachher || PLATZHALTER_ZEIGEN);
 ---
 <header class="kopfzeile">
   <div class="wrap kopfzeile__innen">

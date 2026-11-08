@@ -1,6 +1,6 @@
 ---
 import Wortmarke from './Wortmarke.astro';
-import { firma } from '../data/firma';
+import { firma, PLATZHALTER_ZEIGEN } from '../data/firma';
 const jahr = new Date().getFullYear();
 ---
 <footer class="fuss">
@@ -21,7 +21,8 @@ const jahr = new Date().getFullYear();
       <li>Telefon <a href={firma.telefonHref}>{firma.telefon}</a></li>
       <li>Fax {firma.fax}</li>
       <li>E-Mail <a href={`mailto:${firma.email}`}>{firma.email}</a></li>
-      <li>Öffnungszeiten <span class="ph">[PLATZHALTER: Öffnungszeiten]</span></li>
+      {firma.oeffnungszeitenText && <li>Öffnungszeiten {firma.oeffnungszeitenText}</li>}
+      {!firma.oeffnungszeitenText && PLATZHALTER_ZEIGEN && <li>Öffnungszeiten <span class="ph">[PLATZHALTER: Öffnungszeiten]</span></li>}
     </ul>
 
     <nav class="fuss__recht" aria-label="Rechtliches">

@@ -1,34 +1,12 @@
 ---
-import type { ImageMetadata } from 'astro';
 import Bildplatz from './Bildplatz.astro';
+import { PLATZHALTER_ZEIGEN } from '../data/firma';
+import { allePaare, fertigePaare } from '../data/vorher-nachher';
 
-/*
- * 2 bis 4 Bildpaare. Beide Fotos eines Paares aus derselben Position,
- * gleicher Ausschnitt, Format 3:2 quer. Fotos nach src/assets/fotos/ legen
- * und hier importieren, z. B.:
- *   import vorher1 from '../assets/fotos/paar1-vorher.jpg';
- */
-type Paar = {
-  titel: string;
-  vorher?: ImageMetadata;
-  nachher?: ImageMetadata;
-  altVorher: string;
-  altNachher: string;
-};
-
-const paare: Paar[] = [
-  {
-    titel: '[PLATZHALTER: Fahrzeug und Schaden, z. B. Kompaktwagen, Seitenschaden Fahrertür]',
-    altVorher: '[PLATZHALTER: Alt-Text Vorher]',
-    altNachher: '[PLATZHALTER: Alt-Text Nachher]',
-  },
-  {
-    titel: '[PLATZHALTER: Fahrzeug und Schaden, z. B. Heckschaden nach Auffahrunfall]',
-    altVorher: '[PLATZHALTER: Alt-Text Vorher]',
-    altNachher: '[PLATZHALTER: Alt-Text Nachher]',
-  },
-];
+// Ohne Platzhalter-Modus nur vollständige Paare mit beiden Fotos zeigen.
+const paare = PLATZHALTER_ZEIGEN ? allePaare : fertigePaare;
 ---
+{paare.length > 0 && (
 <section id="vorher-nachher" class="section" aria-labelledby="vn-titel">
   <div class="wrap">
     <header class="kopf vn-kopf">
@@ -53,12 +31,13 @@ const paare: Paar[] = [
               aria-label={`Vergleich Paar ${i + 1}: Anteil des Vorher-Bildes in Prozent`} hidden />
             <span class="vn__griff" aria-hidden="true"><span></span></span>
           </div>
-          <figcaption class="vn__text"><span class="ph">{p.titel}</span></figcaption>
+          <figcaption class="vn__text"><span class:list={[{ ph: p.titel.includes('[PLATZHALTER') }]}>{p.titel}</span></figcaption>
         </figure>
       ))}
     </div>
   </div>
 </section>
+)}
 
 <script>
   import { initVorherNachher } from '../scripts/vorher-nachher';

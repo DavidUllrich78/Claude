@@ -41,6 +41,16 @@ export const firma = {
    */
   geo: { lat: 48.7497, lon: 8.8128, exakt: false },
 
+  /**
+   * Bestätigte Merkmale für die Vertrauensleiste, z. B. 'Meisterbetrieb',
+   * 'Abwicklung mit der Versicherung', 'Ersatzwagen', 'Hol- und Bringservice'.
+   * Nur eintragen, was der Betrieb bestätigt hat.
+   */
+  merkmale: [] as string[],
+
+  /** Öffnungszeiten als Text für die Seite, z. B. 'Mo bis Fr 7:30 bis 17:00 Uhr'. Leer = ausgeblendet. */
+  oeffnungszeitenText: '',
+
   /** [PLATZHALTER: Öffnungszeiten] Format für JSON-LD: z. B. { tage: 'Mo–Fr', von: '07:30', bis: '17:00' } */
   oeffnungszeiten: [] as { tage: string; von: string; bis: string }[],
 
@@ -57,3 +67,19 @@ export const firma = {
 } as const;
 
 export const P = (text: string) => `[PLATZHALTER: ${text}]`;
+
+/**
+ * Platzhalter anzeigen? Standard: nein. Dann blendet die Seite alles aus,
+ * wofür noch keine bestätigten Angaben vorliegen, und wirkt fertig.
+ * Mit `npm run dev:platzhalter` bzw. `npm run build:platzhalter` erscheinen
+ * alle offenen Stellen gelb markiert.
+ * Impressum und Datenschutz zeigen ihre Platzhalter immer, weil dort
+ * Pflichtangaben fehlen.
+ */
+export const PLATZHALTER_ZEIGEN = import.meta.env.PUBLIC_PLATZHALTER === '1';
+
+/** true, wenn ein Text noch ein Platzhalter ist */
+export const istPlatzhalter = (wert?: string | null) => !!wert && wert.includes('[PLATZHALTER');
+
+/** Zeigt einen Wert, wenn er bestätigt ist oder Platzhalter eingeblendet werden. */
+export const zeigen = (wert?: string | null) => !!wert && (PLATZHALTER_ZEIGEN || !istPlatzhalter(wert));

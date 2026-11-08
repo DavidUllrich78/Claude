@@ -1,20 +1,20 @@
 ---
 import Icon from './Icon.astro';
 import Bildplatz from './Bildplatz.astro';
-import { firma } from '../data/firma';
+import { firma, PLATZHALTER_ZEIGEN, zeigen } from '../data/firma';
 
 // Sobald das Werkstattfoto vorliegt:
 // import werkstatt from '../assets/fotos/werkstatt.jpg';
 const werkstatt = undefined;
 
-const merkmale = [
-  'Meisterbetrieb ja/nein',
-  'Abwicklung mit der Versicherung ja/nein',
-  'Ersatzwagen ja/nein',
-  'Hol- und Bringservice ja/nein',
-];
+const merkmale: string[] = firma.merkmale.length
+  ? [...firma.merkmale]
+  : PLATZHALTER_ZEIGEN
+    ? ['Meisterbetrieb ja/nein', 'Abwicklung mit der Versicherung ja/nein', 'Ersatzwagen ja/nein', 'Hol- und Bringservice ja/nein'].map((m) => `[PLATZHALTER: ${m}]`)
+    : [];
+const mitBild = Boolean(werkstatt) || PLATZHALTER_ZEIGEN;
 ---
-<section class="hero section--dunkel" aria-labelledby="hero-titel">
+<section class:list={['hero section--dunkel', { 'hero--ohne-bild': !mitBild }]} aria-labelledby="hero-titel">
   <div class="wrap hero__raster">
     <div class="hero__text">
       <p class="hero__adresse">{firma.strasse} · {firma.plz} {firma.ort}</p>
@@ -45,7 +45,7 @@ const merkmale = [
       </div>
     </div>
 
-    <div class="hero__bild">
+    {mitBild && <div class="hero__bild">
       <Bildplatz
         src={werkstatt}
         alt="[PLATZHALTER: Beschreibung des Werkstattfotos]"
@@ -56,7 +56,7 @@ const merkmale = [
         eager
         dunkel
       />
-    </div>
+    </div>}
 
     <div class="hero__vertrauen">
       <a class="bewertung" href={firma.google.url} rel="noopener" target="_blank">
@@ -66,12 +66,15 @@ const merkmale = [
             <Icon name="stern" /><Icon name="stern" /><Icon name="stern" /><Icon name="stern" /><Icon name="stern" />
           </span>
           <span><span class="visually-hidden">{firma.google.sterne} von 5 Sternen, </span>{firma.google.anzahl} Bewertungen auf Google</span>
-          <span class="bewertung__stand">Stand: <span class="ph">{firma.google.stand}</span><span class="visually-hidden"> (öffnet in neuem Tab)</span></span>
+          {zeigen(firma.google.stand) && <span class="bewertung__stand">Stand: <span class:list={[{ ph: firma.google.stand.includes('[PLATZHALTER') }]}>{firma.google.stand}</span></span>}
+          <span class="visually-hidden"> (öffnet in neuem Tab)</span>
         </span>
       </a>
-      <ul class="merkmale" role="list">
-        {merkmale.map((m) => <li><span class="ph">[PLATZHALTER: {m}]</span></li>)}
-      </ul>
+      {merkmale.length > 0 && (
+        <ul class="merkmale" role="list">
+          {merkmale.map((m) => <li><span class:list={[{ ph: m.includes('[PLATZHALTER') }]}>{m}</span></li>)}
+        </ul>
+      )}
     </div>
   </div>
 </section>
@@ -205,5 +208,7 @@ const merkmale = [
       gap: var(--s-7);
     }
     .merkmale { justify-content: flex-end; }
+    .hero--ohne-bild .hero__text { grid-column: 1 / -1; }
+    .hero--ohne-bild .hero__zeile2 { font-size: min(8rem, 8.6vw); }
   }
 </style>

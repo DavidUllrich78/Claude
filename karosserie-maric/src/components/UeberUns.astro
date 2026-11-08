@@ -1,13 +1,19 @@
 ---
 import Bildplatz from './Bildplatz.astro';
-import { firma } from '../data/firma';
+import { firma, PLATZHALTER_ZEIGEN } from '../data/firma';
 
 // import team from '../assets/fotos/team.jpg';
 const team = undefined;
+const mitBild = Boolean(team) || PLATZHALTER_ZEIGEN;
+
+/** Bestätigte Angaben eintragen; leere Werte werden ausgeblendet. */
+const werdegang = ''; // z. B. 'Franjo Maric ist Karosseriebaumeister und seit … selbstständig.'
+const gegruendet = ''; // z. B. '1998'
+const meisterbetrieb = ''; // z. B. 'Ja'
 ---
-<section id="ueber-uns" class="section ueber" aria-labelledby="ueber-titel">
+<section id="ueber-uns" class:list={['section ueber', { 'ueber--ohne-bild': !mitBild }]} aria-labelledby="ueber-titel">
   <div class="wrap ueber__raster">
-    <div class="ueber__bild">
+    {mitBild && <div class="ueber__bild">
       <Bildplatz
         src={team}
         alt="[PLATZHALTER: z. B. Franjo Maric und Team vor der Werkstatt in Simmozheim]"
@@ -16,7 +22,7 @@ const team = undefined;
         ratio="4 / 3"
         sizes="(min-width: 60em) 55vw, 100vw"
       />
-    </div>
+    </div>}
 
     <div class="ueber__text">
       <header class="kopf">
@@ -27,17 +33,22 @@ const team = undefined;
         {firma.inhaber} führt {firma.name} in Simmozheim im {firma.landkreis}.
         Wenn Sie anrufen, sprechen Sie mit dem Betrieb, der Ihr Auto auch repariert.
       </p>
-      <p><span class="ph">[PLATZHALTER: Werdegang und Erfahrung von Franjo Maric in 2 bis 3 Sätzen, z. B. Ausbildung, Meistertitel ja/nein, seit wann selbstständig]</span></p>
+      {werdegang && <p>{werdegang}</p>}
+      {!werdegang && PLATZHALTER_ZEIGEN && <p><span class="ph">[PLATZHALTER: Werdegang und Erfahrung von Franjo Maric in 2 bis 3 Sätzen, z. B. Ausbildung, Meistertitel ja/nein, seit wann selbstständig]</span></p>}
 
       <dl class="fakten">
-        <div>
-          <dt>Gegründet</dt>
-          <dd><span class="ph">[PLATZHALTER: Gründungsjahr]</span></dd>
-        </div>
-        <div>
-          <dt>Meisterbetrieb</dt>
-          <dd><span class="ph">[PLATZHALTER: ja/nein]</span></dd>
-        </div>
+        {(gegruendet || PLATZHALTER_ZEIGEN) && (
+          <div>
+            <dt>Gegründet</dt>
+            <dd>{gegruendet || <span class="ph">[PLATZHALTER: Gründungsjahr]</span>}</dd>
+          </div>
+        )}
+        {(meisterbetrieb || PLATZHALTER_ZEIGEN) && (
+          <div>
+            <dt>Meisterbetrieb</dt>
+            <dd>{meisterbetrieb || <span class="ph">[PLATZHALTER: ja/nein]</span>}</dd>
+          </div>
+        )}
         <div>
           <dt>Standort</dt>
           <dd>{firma.strasse}, {firma.ort}</dd>
@@ -80,5 +91,6 @@ const team = undefined;
     /* Bild läuft bis zum linken Rand: bewusster Bruch des Rasters */
     .ueber__bild { grid-column: 1 / 7; margin-left: calc(var(--gutter) * -1); }
     .ueber__text { grid-column: 7 / 13; padding-left: var(--s-5); }
+    .ueber--ohne-bild .ueber__text { grid-column: 1 / 9; padding-left: 0; }
   }
 </style>

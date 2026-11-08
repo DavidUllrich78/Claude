@@ -50,15 +50,31 @@ Ein anderer Mail-Dienst ist möglich. Dann `functions/api/anfrage.js` und die Da
 
 Keine KI-generierten Fotos, keine Stockfotos von Werkstätten.
 
-## Platzhalter
+## Platzhalter und fertige Ansicht
 
-Alle offenen Angaben sind sichtbar als `[PLATZHALTER: …]` markiert (gelb gestreift). Vor dem Livegang:
+Standardmäßig (`npm run dev`, `npm run build`) zeigt die Seite nur bestätigte Angaben und wirkt fertig. Alles, wofür noch Material fehlt, ist ausgeblendet:
+
+- Bildflächen in Hero und „Über uns“ (Text läuft dann über die volle Breite)
+- Abschnitt Vorher/Nachher samt Menüpunkt (erscheint, sobald ein Paar beide Fotos hat)
+- Bewertungszitate, Stand der Google-Wertung, Merkmale in der Vertrauensleiste
+- Öffnungszeiten, Gründungsjahr, Meisterbetrieb, Werdegang, Leistung 04
+
+Alle offenen Stellen gelb markiert anzeigen:
 
 ```bash
-grep -rn "PLATZHALTER" src/
+npm run dev:platzhalter
+npm run build:platzhalter
 ```
 
-muss leer sein.
+Echte Angaben trägst du ein in `src/data/firma.ts` (`merkmale`, `oeffnungszeitenText`, `oeffnungszeiten`, `google.stand`, `geo`), `src/data/vorher-nachher.ts`, `src/components/UeberUns.astro` (`werdegang`, `gegruendet`, `meisterbetrieb`) und `src/components/Bewertungen.astro`. Dann erscheinen die Abschnitte automatisch.
+
+Impressum und Datenschutz zeigen ihre Platzhalter immer, weil dort Pflichtangaben fehlen. Vor dem Livegang muss
+
+```bash
+grep -rn "PLATZHALTER" src/pages/
+```
+
+leer sein.
 
 ## Sicherheit
 

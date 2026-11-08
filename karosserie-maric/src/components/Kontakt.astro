@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { firma } from '../data/firma';
+import { firma, PLATZHALTER_ZEIGEN } from '../data/firma';
 
 const { lat, lon } = firma.geo;
 const bbox = [lon - 0.012, lat - 0.006, lon + 0.012, lat + 0.006].map((n) => n.toFixed(4)).join('%2C');
@@ -36,10 +36,12 @@ const nachbarorte = firma.region.filter((o) => o !== 'Simmozheim');
           <dt><Icon name="telefon" /> Fax</dt>
           <dd>{firma.fax}</dd>
         </div>
-        <div>
-          <dt><Icon name="uhr" /> Öffnungszeiten</dt>
-          <dd><span class="ph">[PLATZHALTER: Öffnungszeiten, z. B. Mo bis Fr, Sa]</span></dd>
-        </div>
+        {(firma.oeffnungszeitenText || PLATZHALTER_ZEIGEN) && (
+          <div>
+            <dt><Icon name="uhr" /> Öffnungszeiten</dt>
+            <dd>{firma.oeffnungszeitenText || <span class="ph">[PLATZHALTER: Öffnungszeiten, z. B. Mo bis Fr, Sa]</span>}</dd>
+          </div>
+        )}
       </dl>
 
       <div class="karte" data-karte data-src={osmEmbed} data-titel="Karte: Lage der Werkstatt in Simmozheim (OpenStreetMap)">
@@ -59,7 +61,7 @@ const nachbarorte = firma.region.filter((o) => o !== 'Simmozheim');
           </div>
         </div>
       </div>
-      {!firma.geo.exakt && <p class="kontakt__notiz"><span class="ph">[PLATZHALTER: exakte Koordinaten der Werkstatt in src/data/firma.ts eintragen, Karte zeigt aktuell Ortsmitte]</span></p>}
+      {!firma.geo.exakt && PLATZHALTER_ZEIGEN && <p class="kontakt__notiz"><span class="ph">[PLATZHALTER: exakte Koordinaten der Werkstatt in src/data/firma.ts eintragen, Karte zeigt aktuell Ortsmitte]</span></p>}
 
       <p class="kontakt__region">
         Die Werkstatt liegt in Simmozheim im {firma.landkreis}, mit kurzen Wegen aus {nachbarorte.slice(0, -1).join(', ')} und {nachbarorte.at(-1)}.

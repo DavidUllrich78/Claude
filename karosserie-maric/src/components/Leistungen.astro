@@ -1,6 +1,7 @@
 ---
+import { zeigen } from '../data/firma';
 /* Leistungen als Positionsliste, aufgebaut wie ein Kostenvoranschlag. */
-const positionen = [
+const allePositionen = [
   {
     nr: '01',
     titel: 'Unfallinstandsetzung',
@@ -26,6 +27,10 @@ const positionen = [
     detail: '[PLATZHALTER: Abwicklung mit der Versicherung ja/nein · Ersatzwagen ja/nein · Hol- und Bringservice ja/nein]',
   },
 ];
+// Ohne bestätigte Angaben: Platzhalter-Details weg, leere Positionen weg.
+const positionen = allePositionen
+  .map((p) => ({ ...p, detail: zeigen(p.detail) ? p.detail : null }))
+  .filter((p) => p.text || p.detail);
 ---
 <section id="leistungen" class="section" aria-labelledby="leistungen-titel">
   <div class="wrap leistungen">
@@ -41,7 +46,7 @@ const positionen = [
           <h3 class="position__titel">{p.titel}</h3>
           <div class="position__text">
             {p.text && <p>{p.text}</p>}
-            {p.detail && <p><span class="ph">{p.detail}</span></p>}
+            {p.detail && <p><span class:list={[{ ph: p.detail.includes('[PLATZHALTER') }]}>{p.detail}</span></p>}
           </div>
         </li>
       ))}
