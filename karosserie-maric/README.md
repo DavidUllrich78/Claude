@@ -44,7 +44,7 @@ Ein anderer Mail-Dienst ist möglich. Dann `functions/api/anfrage.js` und die Da
 1. Originalfotos (mindestens 2000 px breit, JPG) nach `src/assets/fotos/` legen.
 2. In der jeweiligen Komponente importieren und an `<Bildplatz src={…} alt="…">` übergeben:
    - `Hero.astro`: Werkstattfoto, 4:5 hoch
-   - `VorherNachher.astro`: 2 bis 4 Paare, 3:2 quer, gleiche Perspektive
+   - `src/data/vorher-nachher.ts`: 2 bis 4 Paare, 3:2 quer, gleiche Perspektive
    - `UeberUns.astro`: Team, 4:3 quer
 3. Astro erzeugt beim Build automatisch AVIF und WebP in passenden Größen.
 
